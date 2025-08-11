@@ -20,36 +20,37 @@ import pandas as pd
 from tqdm import tqdm
 from PIL import Image
 
-# Step 1: Define paths
-dataset_path = "/Volumes/ryans-ssd/Datasets/clothing-dataset/images_original"
-resized_dataset_path = "/Volumes/ryans-ssd/Datasets/clothing-dataset/images_resized"
-
-# Step 2: Create output folder for resized dataset if it doesn't exist
+#  Define paths
+dataset_path = "C:/Users/rzafft1/Desktop/images_original"
+resized_dataset_path = "C:/Users/rzafft1/Desktop/images_resized"
 os.makedirs(resized_dataset_path, exist_ok=True)
 
-# Step 3: Choose fixed size for all images in the dataset
-target_size = (224, 224) 
+# Target size
+target_size = (224, 224)
 
-# Step 4: Get all image filenames in the folder
+# Supported input image extensions
+supported_exts = ('.jpg', '.jpeg', '.png', '.jfif', '.bmp', '.tiff', '.webp')
+
+# Get all image filenames with supported extensions, ignoring hidden files
 image_files = [
-    filename for filename in os.listdir(dataset_path)
-    if filename.lower().endswith(('.jpg', '.jpeg')) and not filename.startswith('.')
+    f for f in os.listdir(dataset_path)
+    if f.lower().endswith(supported_exts) and not f.startswith('.')
 ]
 
-# Step 5: Loop through images and resize
-# Note: Use tqdm to show a progress bar for the process
-# Note: Use PIL to load each image, convert to a consist color space, resize the image, and save the image
-# Note: This process will change the aspect ratio of non-square images
-for filename in tqdm(image_files, desc="Resizing images"):
+for filename in tqdm(image_files, desc="Resizing and converting images"):
     src_path = os.path.join(dataset_path, filename)
-    dst_path = os.path.join(resized_dataset_path, filename)
+    
+    # Change extension to .jpg for saving
+    base_name = os.path.splitext(filename)[0]
+    dst_filename = base_name + ".jpg"
+    dst_path = os.path.join(resized_dataset_path, dst_filename)
+    
     try:
         with Image.open(src_path) as img:
-            img = img.convert("RGB")  
+            img = img.convert("RGB")  # Convert to RGB color space for JPEG
             img_resized = img.resize(target_size, Image.Resampling.LANCZOS)
             img_resized.save(dst_path, "JPEG", quality=95)
     except Exception as e:
         print(f"Error processing {filename}: {e}")
 
-print("All images resized and saved.")
-
+print("All images resized and converted to JPEG.")
