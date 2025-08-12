@@ -21,8 +21,9 @@ from tqdm import tqdm
 from PIL import Image
 
 #  Define paths
-dataset_path = "C:/Users/rzafft1/Desktop/images_original"
-resized_dataset_path = "C:/Users/rzafft1/Desktop/images_resized"
+dataset_path = "/Volumes/ryans-ssd/Datasets/clothing-dataset/images_original"
+resized_dataset_path = "/Volumes/ryans-ssd/Datasets/clothing-dataset/images_resized"
+
 os.makedirs(resized_dataset_path, exist_ok=True)
 
 # Target size
